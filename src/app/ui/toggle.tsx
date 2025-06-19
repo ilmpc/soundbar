@@ -26,7 +26,7 @@ export const Toggle = ({
   </div>
 );
 
-export const RecordToggle = ({
+export const RedToggle = ({
   className,
   containerClassName,
   ...props
@@ -48,4 +48,12 @@ export const RecordToggle = ({
       {...props}
     />
   </div>
+);
+
+export const BlueToggle = (props: Omit<ToggleProps, "className">) => (
+  <Toggle
+    className="flex items-center justify-center gap-1 p-1 text-white *:size-4 data-[state=on]:translate-y-1 data-[state=off]:bg-blue-500 data-[state=on]:bg-blue-500/70 data-[state=off]:text-blue-800 data-[state=off]:shadow-[0_1px_2px_0_white_inset]"
+    containerClassName="bg-blue-600 pb-0.5"
+    {...props}
+  />
 );

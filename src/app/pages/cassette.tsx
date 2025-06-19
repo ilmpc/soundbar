@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef } from "react";
 
-export default function Cassette({
+function Cassette({
   isPlaying = false,
   className,
 }: {
@@ -205,3 +205,11 @@ export default function Cassette({
     </svg>
   );
 }
+
+export const CassettePlayerSection = ({ record }: { record: boolean }) => (
+  <div className="rounded-md border-4 bg-neutral-450 pb-2 shadow-[0_12px_3px_0_rgba(0,0,0,0.2)]">
+    <div className="-mx-1 -mt-1 rounded-md border-4 bg-neutral-300 p-5 pb-3">
+      <Cassette className="w-full" isPlaying={record} />
+    </div>
+  </div>
+);
