@@ -16,7 +16,7 @@ export const Toggle = ({
   >
     <Root
       className={cn(
-        "-mx-0.5 -mt-0.5 grid place-items-center border-2 border-black p-4 text-neutral-700 transition-all *:size-6",
+        "-mx-0.5 -mt-0.5 grid cursor-pointer place-items-center border-2 border-black p-4 text-neutral-700 transition-all *:size-6",
         "data-[state=off]:bg-neutral-300 data-[state=off]:shadow-[0_4px_3px_0_white_inset]",
         "data-[state=on]:translate-y-2.5 data-[state=on]:bg-neutral-300/70",
         className,

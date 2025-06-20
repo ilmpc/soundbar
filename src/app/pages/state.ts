@@ -3,12 +3,7 @@ import { RecordManager } from "./record-manager";
 import { SoundManager } from "./sound-manager";
 import { sounds } from "./sounds";
 
-const soundManager = new SoundManager(
-  Object.entries(sounds).map(([id, url]) => ({
-    id,
-    url,
-  })),
-);
+const soundManager = new SoundManager(sounds);
 
 type RecorderState = "record" | "play" | "pause" | "stop";
 type SoundbarState = {
@@ -45,16 +40,14 @@ export const useSoundbarStore = create<SoundbarState>((set, get) => ({
 }));
 
 useSoundbarStore.subscribe(async (state) => {
-  await soundManager.initialize();
   soundManager.setMasterVolume(state.volume);
 });
-useSoundbarStore.subscribe(async (state) => {
-  await soundManager.initialize();
-  soundManager.setActiveSounds(state.soundbar);
-});
+useSoundbarStore.subscribe((state) =>
+  soundManager.setActiveSounds(state.soundbar),
+);
+
 useSoundbarStore.subscribe(async (state) => {
   if (state.recorder !== "record") return;
-  await soundManager.initialize();
   const recordManager = new RecordManager(
     soundManager.getAudioContext(),
     soundManager.getMasterGainNode(),
