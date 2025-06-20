@@ -1,6 +1,6 @@
+import { isValid } from "@telegram-apps/init-data-node/web";
 import { Hono } from "hono";
 import { uploadAudio } from "./uploader";
-import { validateTelegramWebAppData } from "./validator";
 
 const app = new Hono<{ Bindings: Env }>().basePath("/api");
 
@@ -53,9 +53,7 @@ app.post("/upload", async (c) => {
     return c.json({ error: "File is missing or invalid" }, 400);
   }
 
-  const isValid = await validateTelegramWebAppData(initData, c.env.BOT_TOKEN);
-
-  if (!isValid) {
+  if (!(await isValid(initData, c.env.BOT_TOKEN))) {
     return c.json({ error: "Invalid data" }, 403);
   }
 
