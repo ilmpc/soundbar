@@ -1,4 +1,6 @@
 import { Hono } from "hono";
+import { uploadAudio } from "./uploader";
+import { validateTelegramWebAppData } from "./validator";
 
 const app = new Hono<{ Bindings: Env }>().basePath("/api");
 
@@ -37,6 +39,37 @@ app.post("/webhook", async (c) => {
     console.error("Error processing webhook:", error);
     return c.json({ error: "Internal server error" }, 500);
   }
+});
+
+app.post("/upload", async (c) => {
+  const body = await c.req.formData();
+  const file = body.get("file");
+  const initData = body.get("initData");
+
+  if (!initData || typeof initData !== "string") {
+    return c.json({ error: "initData is missing or invalid" }, 400);
+  }
+  if (!file || !(file instanceof File)) {
+    return c.json({ error: "File is missing or invalid" }, 400);
+  }
+
+  const isValid = validateTelegramWebAppData(initData, c.env.BOT_TOKEN);
+
+  if (!isValid) {
+    return c.json({ error: "Invalid data" }, 403);
+  }
+
+  const params = new URLSearchParams(initData);
+  const user = JSON.parse(params.get("user") || "{}");
+  const userId = user.id;
+
+  if (!userId) {
+    return c.json({ error: "Could not determine user ID" }, 400);
+  }
+
+  await uploadAudio(c.env.BOT_TOKEN, userId, file);
+
+  return c.status(200);
 });
 
 app.get("/health", (c) => {

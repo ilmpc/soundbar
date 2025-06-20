@@ -9,7 +9,7 @@ type SoundbarState = {
   volume: number;
   setRecorder: (state: RecorderState) => void;
   setVolume: (volume: number) => void;
-  recording?: Blob;
+  recording?: Blob | null;
   saveRecord: (recording: Blob) => void;
 
   soundbar: Set<string>;

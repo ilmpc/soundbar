@@ -13,14 +13,28 @@ declare global {
   interface Window {
     Telegram: {
       WebApp: {
-        downloadFile: (
-          params: { url: string; file_name?: string },
-          callback?: (accepted: boolean) => void,
-        ) => void;
+        initData: string;
       };
     };
   }
 }
+
+const uploadRecording = async () => {
+  const { recording } = useSoundbarStore.getState();
+  if (!recording) {
+    console.warn("No recording available to upload.");
+    return;
+  }
+  useSoundbarStore.setState({ recording: null });
+
+  const formData = new FormData();
+  formData.append("file", recording);
+  formData.append("initData", window.Telegram.WebApp.initData);
+  await fetch("/api/upload", {
+    body: formData,
+    method: "POST",
+  });
+};
 
 export default function App({ className }: { className?: string }) {
   const isRecording = useSoundbarStore((state) => state.recorder === "record");
@@ -31,17 +45,7 @@ export default function App({ className }: { className?: string }) {
       <CassettePlayerSection
         disabled={isEmptyRecording}
         isRecording={isRecording}
-        onClick={() => {
-          const { recording } = useSoundbarStore.getState();
-          const url = URL.createObjectURL(recording!);
-          window.Telegram.WebApp.downloadFile(
-            {
-              file_name: `soundbar_${new Date().toISOString()}.webm`,
-              url,
-            },
-            () => URL.revokeObjectURL(url),
-          );
-        }}
+        onClick={uploadRecording}
       />
 
       <div className="rounded-md border-4 bg-neutral-300">
