@@ -1,10 +1,11 @@
 import { useEffect, useId, useRef } from "react";
+import { cn } from "~/utils";
 
 function Cassette({
-  isPlaying = false,
+  isRecording = false,
   className,
 }: {
-  isPlaying?: boolean;
+  isRecording?: boolean;
   className?: string;
 }) {
   const rootId = useId();
@@ -14,7 +15,7 @@ function Cassette({
   useEffect(() => {
     if (!svgRef.current) return;
 
-    if (isPlaying) {
+    if (isRecording) {
       if (firstStart.current) {
         svgRef.current
           .querySelectorAll("animateTransform")
@@ -25,7 +26,7 @@ function Cassette({
     } else {
       svgRef.current.pauseAnimations();
     }
-  }, [isPlaying]);
+  }, [isRecording]);
 
   return (
     <svg className={className} fill="none" ref={svgRef} viewBox="0 0 375 209">
@@ -206,10 +207,21 @@ function Cassette({
   );
 }
 
-export const CassettePlayerSection = ({ record }: { record: boolean }) => (
-  <div className="rounded-md border-4 bg-neutral-450 pb-2 shadow-[0_12px_3px_0_rgba(0,0,0,0.2)]">
-    <div className="-mx-1 -mt-1 rounded-md border-4 bg-neutral-300 p-5 pb-3">
-      <Cassette className="w-full" isPlaying={record} />
+export const CassettePlayerSection = ({
+  isRecording,
+  className,
+  ...props
+}: { isRecording: boolean } & React.ComponentProps<"button">) => (
+  <button
+    className={cn(
+      "rounded-md border-4 bg-neutral-450 pb-2 shadow-[0_12px_3px_0_rgba(0,0,0,0.2)] active:*:translate-y-3",
+      className,
+    )}
+    type="button"
+    {...props}
+  >
+    <div className="-mx-1 -mt-1 rounded-md border-4 bg-neutral-300 p-5 pb-3 transition-transform">
+      <Cassette className="w-full" isRecording={isRecording} />
     </div>
-  </div>
+  </button>
 );
