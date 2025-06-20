@@ -11,5 +11,7 @@
     "enabled": true
   },
   "upload_source_maps": true,
-  "vars": { "BOT_TOKEN": "" }
+  "vars": {
+    "WORKER_URL": "https://soundbar.ilmpc.workers.dev/"
+  }
 }

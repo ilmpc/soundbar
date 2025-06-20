@@ -2,9 +2,14 @@ import { isValid } from "@telegram-apps/init-data-node/web";
 import { Hono } from "hono";
 import { uploadAudio } from "./uploader";
 
-const app = new Hono<{ Bindings: Env }>().basePath("/api");
+// Secrets
+declare global {
+  interface Env {
+    BOT_TOKEN: string;
+  }
+}
 
-const URL = "https://soundbar.ilmpc.workers.dev/";
+const app = new Hono<{ Bindings: Env }>().basePath("/api");
 
 app.post("/webhook", async (c) => {
   try {
@@ -22,7 +27,7 @@ app.post("/webhook", async (c) => {
               {
                 text: "Launch Soundbar",
                 web_app: {
-                  url: URL,
+                  url: c.env.WORKER_URL,
                 },
               },
             ],

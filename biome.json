@@ -12,12 +12,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!package.json",
-      "!bun.lock",
-      "!tsconfig.*"
-    ]
+    "includes": ["**", "!package.json", "!bun.lock", "!tsconfig.*"]
   },
   "formatter": {
     "enabled": true,

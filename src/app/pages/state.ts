@@ -70,11 +70,12 @@ useSoundbarStore.subscribe(async (state, prevState) => {
   if (state.recorder === prevState.recorder) return;
   if (state.recorder !== "stop") return;
 
-  const { recordManager, saveRecord, setRecordManager } = state;
+  const { recordManager, saveRecord, setRecordManager, clearSoundbar } = state;
   if (recordManager) {
     saveRecord(await recordManager.stopRecording());
     setRecordManager();
   }
+  clearSoundbar();
 });
 
 useSoundbarStore.subscribe(async (state, prevState) => {
