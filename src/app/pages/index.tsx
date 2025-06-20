@@ -10,16 +10,17 @@ import {
 } from "./controls";
 import { useSoundbarStore } from "./state";
 
-const uploadRecording = async () => {
+const uploadRecording = () => {
   const { recording } = useSoundbarStore.getState();
   if (!recording) {
     console.warn("No recording available to upload.");
     return;
   }
-  toast.loading("Сохраняем запись...");
   useSoundbarStore.setState({ recording: null });
-  await uploadAudio(recording);
-  toast.success("Запись отправлена в чат!");
+  toast.promise(uploadAudio(recording), {
+    loading: "Сохраняем запись...",
+    success: "Запись отправлена в чат!",
+  });
 };
 
 export default function App({ className }: { className?: string }) {
