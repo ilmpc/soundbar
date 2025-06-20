@@ -1,19 +1,15 @@
 export async function uploadAudio(
   botToken: string,
-  userId: string | number,
+  user: { id: number; first_name: string; username?: string },
   file: File,
 ): Promise<void> {
   const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendAudio`;
 
   const formData = new FormData();
-  formData.append("chat_id", userId.toString());
+  formData.append("chat_id", user.id.toString());
   formData.append("audio", file);
-
-  // Optional: Add a caption
-  formData.append(
-    "caption",
-    `🎵 Recording from Soundbar ${new Date().toISOString()}`,
-  );
+  formData.append("title", `Soundbar track [${new Date().toISOString()}]`);
+  formData.append("performer", user.username ?? user.first_name);
 
   try {
     const response = await fetch(telegramApiUrl, {

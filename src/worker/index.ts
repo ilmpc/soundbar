@@ -1,4 +1,4 @@
-import { isValid } from "@telegram-apps/init-data-node/web";
+import { isValid, parse } from "@telegram-apps/init-data-node/web";
 import { Hono } from "hono";
 import { uploadAudio } from "./uploader";
 
@@ -49,28 +49,26 @@ app.post("/webhook", async (c) => {
 app.post("/upload", async (c) => {
   const body = await c.req.formData();
   const file = body.get("file");
-  const initData = body.get("initData");
+  const initDataRaw = body.get("initData");
 
-  if (!initData || typeof initData !== "string") {
+  if (!initDataRaw || typeof initDataRaw !== "string") {
     return c.json({ error: "initData is missing or invalid" }, 400);
   }
   if (!file || !(file instanceof File)) {
     return c.json({ error: "File is missing or invalid" }, 400);
   }
 
-  if (!(await isValid(initData, c.env.BOT_TOKEN))) {
+  if (!(await isValid(initDataRaw, c.env.BOT_TOKEN))) {
     return c.json({ error: "Invalid data" }, 403);
   }
 
-  const params = new URLSearchParams(initData);
-  const user = JSON.parse(params.get("user") || "{}");
-  const userId = user.id;
+  const { user } = parse(initDataRaw);
 
-  if (!userId) {
+  if (!user) {
     return c.json({ error: "Could not determine user ID" }, 400);
   }
 
-  await uploadAudio(c.env.BOT_TOKEN, userId, file);
+  await uploadAudio(c.env.BOT_TOKEN, user, file);
 
   return c.status(200);
 });
