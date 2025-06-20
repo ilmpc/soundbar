@@ -1,15 +1,13 @@
-import { createHmac } from "node:crypto";
-
 /**
  * Validates the data received from a Telegram Mini App.
  * @param initData - The value of window.Telegram.WebApp.initData.
  * @param botToken - Your bot's token.
- * @returns True if the data is valid, false otherwise.
+ * @returns Promise that resolves to true if the data is valid, false otherwise.
  */
-export function validateTelegramWebAppData(
+export async function validateTelegramWebAppData(
   initData: string,
   botToken: string,
-): boolean {
+): Promise<boolean> {
   try {
     const params = new URLSearchParams(initData);
     const hash = params.get("hash");
@@ -23,12 +21,40 @@ export function validateTelegramWebAppData(
 
     const dataCheckString = dataCheckArr.join("\n");
 
-    const secretKey = createHmac("sha256", "WebAppData")
-      .update(botToken)
-      .digest();
-    const calculatedHash = createHmac("sha256", secretKey)
-      .update(dataCheckString)
-      .digest("hex");
+    // Create secret key using Web Crypto API
+    const encoder = new TextEncoder();
+    const webAppDataKey = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode("WebAppData"),
+      { hash: "SHA-256", name: "HMAC" },
+      false,
+      ["sign"],
+    );
+
+    const secretKeyBuffer = await crypto.subtle.sign(
+      "HMAC",
+      webAppDataKey,
+      encoder.encode(botToken),
+    );
+
+    const secretKey = await crypto.subtle.importKey(
+      "raw",
+      secretKeyBuffer,
+      { hash: "SHA-256", name: "HMAC" },
+      false,
+      ["sign"],
+    );
+
+    // Calculate hash using Web Crypto API
+    const hashBuffer = await crypto.subtle.sign(
+      "HMAC",
+      secretKey,
+      encoder.encode(dataCheckString),
+    );
+
+    const calculatedHash = Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
     return calculatedHash === hash;
   } catch (error) {

@@ -53,7 +53,7 @@ app.post("/upload", async (c) => {
     return c.json({ error: "File is missing or invalid" }, 400);
   }
 
-  const isValid = validateTelegramWebAppData(initData, c.env.BOT_TOKEN);
+  const isValid = await validateTelegramWebAppData(initData, c.env.BOT_TOKEN);
 
   if (!isValid) {
     return c.json({ error: "Invalid data" }, 403);
