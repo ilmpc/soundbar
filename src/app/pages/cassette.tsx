@@ -29,7 +29,13 @@ function Cassette({
   }, [isRecording]);
 
   return (
-    <svg className={className} fill="none" ref={svgRef} viewBox="0 0 375 209">
+    <svg
+      className={cn("h-full w-full object-contain", className)}
+      fill="none"
+      ref={svgRef}
+      viewBox="0 0 375 209"
+      preserveAspectRatio="xMidYMid meet"
+    >
       <g filter={`url(#${rootId}_a)`}>
         <mask fill="#fff" id={`${rootId}_b`}>
           <path d="M2.01 0H373v17H2V0Z" />
@@ -214,14 +220,14 @@ export const CassettePlayerSection = ({
 }: { isRecording: boolean } & React.ComponentProps<"button">) => (
   <button
     className={cn(
-      "rounded-md border-4 bg-neutral-450 pb-2 shadow-[0_12px_3px_0_rgba(0,0,0,0.2)] active:*:translate-y-3",
+      "flex min-h-0 rounded-md border-4 bg-neutral-450 pb-2 shadow-[0_12px_3px_0_rgba(0,0,0,0.2)] active:*:translate-y-3",
       className,
     )}
     type="button"
     {...props}
   >
-    <div className="-mx-1 -mt-1 rounded-md border-4 bg-neutral-300 p-5 pb-3 transition-transform">
-      <Cassette className="w-full" isRecording={isRecording} />
+    <div className="-mx-1 -mt-1 flex min-h-0 flex-1 rounded-md border-4 bg-neutral-300 p-5 pb-3 transition-transform">
+      <Cassette className="flex-1" isRecording={isRecording} />
     </div>
   </button>
 );

@@ -41,14 +41,20 @@ export default function App({ className }: { className?: string }) {
   const isEmptyRecording = useSoundbarStore((state) => state.recording == null);
 
   return (
-    <main className={cn("grid gap-7 p-2.5", className)}>
+    <main
+      className={cn(
+        "flex h-(--tg-viewport-height) flex-col gap-5 p-2.5",
+        className,
+      )}
+    >
       <CassettePlayerSection
+        className="min-h-0"
         disabled={isEmptyRecording}
         isRecording={isRecording}
         onClick={uploadRecording}
       />
 
-      <div className="rounded-md border-4 bg-neutral-300">
+      <div className="w-full rounded-md border-4 bg-neutral-300">
         <SoundControls />
 
         <div className="flex flex-col gap-5 p-4">
