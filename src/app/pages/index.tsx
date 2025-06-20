@@ -1,4 +1,4 @@
-import { cn } from "~/utils";
+import { cn, convertToMp3 } from "~/utils";
 import { CassettePlayerSection } from "./cassette";
 import {
   PlayControls,
@@ -27,8 +27,10 @@ const uploadRecording = async () => {
   }
   useSoundbarStore.setState({ recording: null });
 
+  const mp3Blob = await convertToMp3(recording);
+
   const formData = new FormData();
-  formData.append("file", recording);
+  formData.append("file", mp3Blob);
   formData.append("initData", window.Telegram.WebApp.initData);
   await fetch("/api/upload", {
     body: formData,

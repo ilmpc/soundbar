@@ -9,12 +9,12 @@ export class RecordManager {
       const destination = new MediaStreamAudioDestinationNode(audioContext);
       masterGainNode.connect(destination);
       this.mediaRecorder = new MediaRecorder(destination.stream, {
-        mimeType: "audio/webm;codecs=opus",
+        mimeType: "audio/webm",
       });
 
       this.recordedChunks = [];
 
-      this.mediaRecorder.ondataavailable = (event) => {
+      this.mediaRecorder.ondataavailable = async (event) => {
         if (event.data.size > 0) {
           this.recordedChunks.push(event.data);
         }
@@ -42,9 +42,9 @@ export class RecordManager {
         return reject(new Error("No recording in progress"));
       }
 
-      this.mediaRecorder.onstop = () => {
+      this.mediaRecorder.onstop = async () => {
         const recordedBlob = new Blob(this.recordedChunks, {
-          type: "audio/webm;codecs=opus",
+          type: "audio/webm",
         });
         resolve(recordedBlob);
       };
