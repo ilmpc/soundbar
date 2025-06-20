@@ -207,7 +207,7 @@ function Cassette({
   );
 }
 
-export const CassettePlayerSection = ({
+export const CassettePlayerButton = ({
   isRecording,
   className,
   ...props

@@ -10,7 +10,6 @@ import Play from "./assets/play.svg?react";
 import Stop from "./assets/stop.svg?react";
 import VolumeIcon from "./assets/volume.svg?react";
 import WandIcon from "./assets/wand.svg?react";
-import { AudioPlayer } from "./audio-player";
 import { useSoundbarStore } from "./state";
 
 const SoundToggle = ({
@@ -110,38 +109,35 @@ export const PlayControls = () => {
   const recorderEmpty = useSoundbarStore((state) => state.recording == null);
 
   return (
-    <>
-      <AudioPlayer />
-      <PlayToggleGroup
-        className="grid grid-flow-col overflow-hidden rounded-sm border-2"
-        onValueChange={(value) => {
-          if (value) {
-            setPlayState(value as "play" | "pause" | "stop");
-          }
-        }}
-        type="single"
-        value={playState}
+    <PlayToggleGroup
+      className="grid grid-flow-col overflow-hidden rounded-sm border-2"
+      onValueChange={(value) => {
+        if (value) {
+          setPlayState(value as "play" | "pause" | "stop");
+        }
+      }}
+      type="single"
+      value={playState}
+    >
+      <PlayToggle
+        className="bg-green-500"
+        disabled={recorderEmpty}
+        value="play"
       >
-        <PlayToggle
-          className="bg-green-500"
-          disabled={recorderEmpty}
-          value="play"
-        >
-          <Play />
-        </PlayToggle>
+        <Play />
+      </PlayToggle>
 
-        <PlayToggle
-          className="bg-yellow-500"
-          disabled={recorderEmpty}
-          value="pause"
-        >
-          <Pause />
-        </PlayToggle>
+      <PlayToggle
+        className="bg-yellow-500"
+        disabled={recorderEmpty}
+        value="pause"
+      >
+        <Pause />
+      </PlayToggle>
 
-        <PlayToggle className="bg-red-500" value="stop">
-          <Stop />
-        </PlayToggle>
-      </PlayToggleGroup>
-    </>
+      <PlayToggle className="bg-red-500" value="stop">
+        <Stop />
+      </PlayToggle>
+    </PlayToggleGroup>
   );
 };

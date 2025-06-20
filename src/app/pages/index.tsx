@@ -1,23 +1,14 @@
-import { cn, convertToMp3 } from "~/utils";
-import { CassettePlayerSection } from "./cassette";
+import { toast } from "sonner";
+import { cn, uploadAudio } from "~/utils";
+import { AudioPlayer } from "./audio-player";
+import { CassettePlayerButton } from "./cassette";
 import {
   PlayControls,
   RecordControl,
   SoundControls,
   VolumeControl,
 } from "./controls";
-
 import { useSoundbarStore } from "./state";
-
-declare global {
-  interface Window {
-    Telegram: {
-      WebApp: {
-        initData: string;
-      };
-    };
-  }
-}
 
 const uploadRecording = async () => {
   const { recording } = useSoundbarStore.getState();
@@ -25,17 +16,10 @@ const uploadRecording = async () => {
     console.warn("No recording available to upload.");
     return;
   }
+  toast.loading("Сохраняем запись...");
   useSoundbarStore.setState({ recording: null });
-
-  const mp3Blob = await convertToMp3(recording);
-
-  const formData = new FormData();
-  formData.append("file", mp3Blob);
-  formData.append("initData", window.Telegram.WebApp.initData);
-  await fetch("/api/upload", {
-    body: formData,
-    method: "POST",
-  });
+  await uploadAudio(recording);
+  toast.success("Запись отправлена в чат!");
 };
 
 export default function App({ className }: { className?: string }) {
@@ -44,7 +28,7 @@ export default function App({ className }: { className?: string }) {
 
   return (
     <main className={cn("flex flex-col gap-5 p-2.5", className)}>
-      <CassettePlayerSection
+      <CassettePlayerButton
         disabled={isEmptyRecording}
         isRecording={isRecording}
         onClick={uploadRecording}
@@ -55,9 +39,8 @@ export default function App({ className }: { className?: string }) {
 
         <div className="flex flex-col gap-5 p-4">
           <RecordControl />
-
           <VolumeControl />
-
+          <AudioPlayer />
           <PlayControls />
         </div>
       </div>

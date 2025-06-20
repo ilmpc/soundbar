@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { RecordManager } from "./record-manager";
-import { SoundManager } from "./sound-manager";
+import { toast } from "sonner";
+import { RecordManager } from "~/utils/record-manager";
+import { SoundManager } from "~/utils/sound-manager";
 import { sounds } from "./sounds";
 
 export type RecorderState = "record" | "play" | "pause" | "stop";
@@ -76,6 +77,7 @@ useSoundbarStore.subscribe(async (state, prevState) => {
     setRecordManager();
   }
   clearSoundbar();
+  toast.info("Для сохранения записи нажмите на кассету");
 });
 
 useSoundbarStore.subscribe(async (state, prevState) => {
