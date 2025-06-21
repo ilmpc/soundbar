@@ -1,5 +1,6 @@
 import { toast } from "sonner";
-import { cn, uploadAudio } from "~/utils";
+import { cn } from "~/utils";
+import { uploadAudio } from "~/utils/upload-audio";
 import { AudioPlayer } from "./audio-player";
 import { CassettePlayerButton } from "./cassette";
 import {

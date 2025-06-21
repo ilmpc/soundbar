@@ -46,7 +46,6 @@ declare global {
 
 export const uploadAudio = async (recording: Blob) => {
   const mp3Blob = await convertToMp3(recording);
-
   const formData = new FormData();
   formData.append("file", mp3Blob);
   formData.append("initData", window.Telegram.WebApp.initData);

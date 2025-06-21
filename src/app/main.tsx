@@ -10,6 +10,6 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Splash />
     <App className="sm:hidden" />
-    <Toaster />
+    <Toaster position="top-center" />
   </StrictMode>,
 );
