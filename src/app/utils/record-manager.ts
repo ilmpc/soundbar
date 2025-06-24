@@ -9,7 +9,7 @@ export class RecordManager {
       const destination = new MediaStreamAudioDestinationNode(audioContext);
       masterGainNode.connect(destination);
       this.mediaRecorder = new MediaRecorder(destination.stream, {
-        mimeType: "audio/webm",
+        mimeType: "audio/mp4",
       });
 
       this.recordedChunks = [];
